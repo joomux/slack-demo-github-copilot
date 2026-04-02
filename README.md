@@ -1,5 +1,7 @@
 # Claims API Demo
 
+> Testing Slack workflow notifications
+
 A TypeScript/Express API with intentional errors for demonstrating CI/CD pipeline failures and Slack notifications.
 
 ## Endpoints
