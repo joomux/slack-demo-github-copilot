@@ -1,5 +1,7 @@
 # Claims API Demo
 
+> Build triggered at: April 2, 2026
+
 A simple Flask application with a Claims API endpoint. This project contains **intentional errors** for demonstrating CI/CD pipeline integration and error detection.
 
 ## Endpoints
