@@ -4,6 +4,7 @@
  */
 
 import express, { Request, Response } from 'express';
+import { encrypt, decrypt, generateKey, deriveKeyFromPassword } from './crypto';
 
 const app = express();
 app.use(express.json());
@@ -83,6 +84,78 @@ app.get('/api/health', (req: Request, res: Response) => {
     version: '1.0.0',
     timestamp: new Date().toISOString()
   // ERROR: missing closing brace and parenthesis
+});
+
+// ============ ENCRYPTION ENDPOINTS ============
+
+// POST encrypt data
+app.post('/api/encrypt', (req: Request, res: Response) => {
+  const { plaintext, key } = req.body;
+  
+  if (!plaintext) {
+    res.status(400).json({ error: 'plaintext is required' });
+    return;
+  }
+  
+  try {
+    const encrypted = encrypt(plaintext, key);
+    res.json({
+      success: true,
+      encrypted
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Encryption failed' });
+  }
+});
+
+// POST decrypt data
+app.post('/api/decrypt', (req: Request, res: Response) => {
+  const { encryptedData, key } = req.body;
+  
+  if (!encryptedData) {
+    res.status(400).json({ error: 'encryptedData is required' });
+    return;
+  }
+  
+  try {
+    const decrypted = decrypt(encryptedData, key);
+    res.json({
+      success: true,
+      decrypted
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Decryption failed - invalid key or corrupted data' });
+  }
+});
+
+// GET generate a new encryption key
+app.get('/api/crypto/generate-key', (req: Request, res: Response) => {
+  const key = generateKey();
+  res.json({
+    key,
+    algorithm: 'AES-256-GCM',
+    keyLength: '256 bits'
+  });
+});
+
+// POST derive key from password
+app.post('/api/crypto/derive-key', (req: Request, res: Response) => {
+  const { password, salt } = req.body;
+  
+  if (!password) {
+    res.status(400).json({ error: 'password is required' });
+    return;
+  }
+  
+  try {
+    const derived = deriveKeyFromPassword(password, salt);
+    res.json({
+      success: true,
+      ...derived
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Key derivation failed' });
+  }
 });
 
 const PORT = process.env.PORT || 3000;
