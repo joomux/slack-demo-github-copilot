@@ -84,12 +84,12 @@ export function generateKey(): string {
  */
 export function deriveKeyFromPassword(password: string, salt?: string): { key: string; salt: string } {
   const saltBuffer = salt ? Buffer.from(salt, 'hex') : crypto.randomBytes(SALT_LENGTH);
-  
-  // INTENTIONAL ERROR: Low iteration count (should be 100000+)
-  const iterations = 1000;  // ERROR: too few iterations, vulnerable to brute force
-  
+
+  // OWASP recommends 310,000+ iterations for PBKDF2-SHA256
+  const iterations = 310000;
+
   const derivedKey = crypto.pbkdf2Sync(password, saltBuffer, iterations, 32, 'sha256');
-  
+
   return {
     key: derivedKey.toString('hex'),
     salt: saltBuffer.toString('hex')
