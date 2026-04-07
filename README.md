@@ -6,19 +6,12 @@ A TypeScript/Express API with intentional errors for demonstrating CI/CD pipelin
 
 ## Endpoints
 
-### Claims API
 - `GET /` - Hello World
 - `GET /api/claims` - Get all claims
 - `GET /api/claims/:id` - Get a specific claim
 - `POST /api/claims` - Create a new claim
 - `DELETE /api/claims/:id` - Delete a claim
 - `GET /api/health` - Health check
-
-### Encryption API
-- `POST /api/encrypt` - Encrypt data using AES-256-GCM
-- `POST /api/decrypt` - Decrypt data
-- `GET /api/crypto/generate-key` - Generate a new encryption key
-- `POST /api/crypto/derive-key` - Derive a key from a password
 
 ## Setup
 
@@ -39,8 +32,6 @@ This codebase contains the following intentional errors that will cause the buil
 | Missing property | `POST /api/claims` | `status` property missing from Claim |
 | Unassigned variable | `DELETE /api/claims/:id` | `deletedClaim` used before assignment |
 | Syntax error | `GET /api/health` | Missing closing brace |
-| Hardcoded secret | `crypto.ts` | Encryption key hardcoded in source |
-| Weak key derivation | `crypto.ts` | PBKDF2 iterations too low (1000 vs 100000+) |
 
 ## CI Pipeline
 
